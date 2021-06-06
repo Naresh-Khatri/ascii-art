@@ -1,17 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <input id='img-uploader' type="file" style="display:block"/>
-  <input type="number" id="details" value="10"/>
-  <!-- <img id="img" src='homer.png' width="1000vw"/> -->
-  <div id="pixel-info"></div>
-  <pre id="ascii-img" style="background: black;color:white; font-size:.7em; width:fit-content"></pre>
-<script src='./script.js'></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <title>Document</title>
+    <style>
+      .loading-spinner {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 18px solid;
+        border-color: lightblue;
+        border-right-color: orange;
+        animation: s 1s infinite linear;
+      }
+      @keyframes s {
+        to {
+          transform: rotate(1turn);
+        }
+      }
+    </style>
+  </head>
+  <body class="flex flex-col items-center bg-blue-300">
+    <div
+      id="loading"
+      style="
+        display: none;
+        background: rgba(33, 155, 255, 0.63);
+        z-index: 10000;
+      "
+      class="absolute h-screen w-screen flex justify-center items-center"
+    >
+      <div class="loading-spinner"></div>
+    </div>
+    <label
+      id="file-label"
+      class="
+        py-2
+        px-10
+        m-2
+        flex
+        justify-center
+        items-center
+        bg-blue-600
+        hover:bg-blue-700
+        text-white
+        w-full
+        transition
+        ease-in
+        duration-200
+        text-center text-base
+        font-semibold
+        shadow-md
+        focus:outline-none
+        focus:ring-2 focus:ring-offset-2
+        rounded-lg
+        overflow-ellipsis
+      "
+      style="width: fit-content"
+    >
+      Upload
+      <input id="img-uploader" style="display: none" type="file" />
+    </label>
+
+    <input type="range" min="1" max="10" id="detail" value="1" />
+    <label id="detail-value" style="text-align: center" for="details"
+      >Detail: 1</label
+    >
+
+    <button
+      id="convert-btn"
+      class="
+        py-2
+        px-10
+        m-2
+        flex
+        justify-center
+        items-center
+        bg-green-600
+        hover:bg-green-700
+        text-white
+        w-full
+        transition
+        ease-in
+        duration-200
+        text-center text-base
+        font-semibold
+        shadow-md
+        focus:outline-none
+        focus:ring-2 focus:ring-offset-2
+        rounded-lg
+      "
+      style="width: fit-content"
+    >
+      Convert!
+    </button>
+    <!-- <img id="img" src='homer.png' width="1000vw"/> -->
+    <!-- <div id="pixel-info"></div> -->
+    <pre
+      id="ascii-img"
+      style="
+        background: black;
+        color: white;
+        font-size: 0.7em;
+        width: fit-content;
+      "
+    ></pre>
+    <script src="./script.js"></script>
+  </body>
 </html>

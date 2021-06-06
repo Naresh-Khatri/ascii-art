@@ -1,26 +1,42 @@
 const canvas = document.createElement('canvas')
 const ctx = canvas.getContext('2d')
 const uploader = document.getElementById('img-uploader')
-document.body.appendChild(canvas)
+const detail = document.getElementById('detail')
+const detailText = document.getElementById('detail-value')
 
-//handle file uploading
 uploader.addEventListener('change', (e) => {
-    if (e.target.files[0]) {
+    document.getElementById('file-label').innerHTML = e.target.files[0].name
+})
+detail.addEventListener('change', (e) => {
+    detailText.innerHTML = 'Detail: ' + e.target.value
+    if (e.target.value > 8) {
+        detailText.innerHTML = 'Detail: ' + e.target.value + "<br>(high details = long loading)"
+
+    }
+})
+
+document.getElementById('convert-btn').addEventListener('click', () => {
+    //handle file uploading
+    addAnimation(true)
+
+    if (uploader.files[0]) {
         const reader = new FileReader()
         reader.onload = () => {
             const img = new Image()
-            img.onload = function() {
+            img.onload = function () {
                 setTimeout(() => {
                     ctx.drawImage(img, 0, 0)
-                    convertToAscii()            
+                    convertToAscii()
                 });
                 canvas.width = img.width
                 canvas.height = img.height
             }
             img.src = reader.result
         }
-        reader.readAsDataURL(e.target.files[0])
+        reader.readAsDataURL(uploader.files[0])
+        document.body.appendChild(canvas)
     }
+
 })
 
 convertToAscii = () => {
@@ -33,25 +49,25 @@ convertToAscii = () => {
     //const gs = ` iazOB`
 
     let asciiText = document.getElementById('ascii-img')
-    let details = Number.parseInt(document.getElementById('details').value)
-    console.log(details)
+    let pixelsPerPass = 11 - Number.parseInt(document.getElementById('detail').value)
     asciiText.innerHTML = ''
-    // asciiText.style.width = img.width + 'px'
-    // asciiText.style.height = img.height + 'px'
+    let asciiString = ''
     let counter = 0
-    for (let i = 0; i < canvas.height; i += details) {
+    for (let i = 0; i < canvas.height; i += pixelsPerPass) {
         let str = ''
-        for (let j = 0; j < canvas.width; j += details) {
-            let pixelData = canvas.getContext('2d').getImageData(j, i, details, details).data
+        for (let j = 0; j < canvas.width; j += pixelsPerPass) {
+            let pixelData = canvas.getContext('2d').getImageData(j, i, pixelsPerPass, pixelsPerPass).data
             let avgPixel = (pixelData[0] + pixelData[1] + pixelData[2]) / 3
             let gsPercent = ((avgPixel - 1) / 255) * 100
             let gsSym = gs[Number.parseInt((gsPercent * gs.length) / 100)]
-            str += ' ' + gsSym
+            str += ' ' + gsSym + ''
             counter++
         }
-        asciiText.innerHTML += str + '<br>'
+        asciiString += str + '<br>'
         //console.log(str)  
     }
+    asciiText.innerHTML = asciiString
+    addAnimation(false)
     //console.log(asciiText.innerHTML)
     // console.log('total pixels ' + counter)
 
@@ -67,4 +83,7 @@ convertToAscii = () => {
     // })
 
 
+}
+function addAnimation(val) {
+    document.getElementById('loading').style.display = val ? 'flex' : 'none'   
 }
